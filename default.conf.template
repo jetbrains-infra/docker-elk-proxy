@@ -17,7 +17,7 @@ server {
     }
 
     location = / {
-        return 301 $host/_plugin/kibana/;
+        return 301 ${SCHEME}://${DOLLAR}host/_plugin/kibana/;
 
     }
 
