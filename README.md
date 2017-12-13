@@ -6,6 +6,7 @@ There are enviromental variables to set:
 * SERVER_NAME (default is '_')
 * AUTH (default is 'test:test')
 * ELK_HOST (default is 'elk.example.com')
+* SCHEME (default is 'https')
 
 Example:
 ```
