@@ -29,7 +29,9 @@ server {
         proxy_set_header Proxy-Connection "Keep-Alive";
         proxy_set_header Authorization "";
 
-        proxy_pass https://${ELK_HOST};
+        resolver ${RESOLVER};
+        set ${DOLLAR}backend "https://${ELK_HOST}";
+        proxy_pass ${DOLLAR}backend;        
 
         auth_basic              "Private access";
         auth_basic_user_file    conf.d/auth.htpasswd;
