@@ -1,0 +1,41 @@
+version: '3'
+services:
+  nginx:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - "CONTAINER_VERSION=test"
+      - "ROUTE_RULES=test http://test_host; test2 http://test_host2; testpath http://testpath_host/path;"
+    depends_on:
+      - httpbin
+      - test_host
+      - test_host2
+      - testpath_host
+  httpbin:
+    image: "kennethreitz/httpbin"
+  test_host:
+    image: "hashicorp/http-echo"
+    command:
+    - "-listen=:80"
+    - "-text=test_host"
+  test_host2:
+    image: "hashicorp/http-echo"
+    command:
+    - "-listen=:80"
+    - "-text=test_host2"
+  testpath_host:
+    image: "hashicorp/http-echo"
+    command:
+    - "-listen=:80"
+    - "-text=testpath_host"
+  sut:
+    image: alpine:latest
+    depends_on:
+      - nginx
+    volumes:
+      - ./test:/test
+    entrypoint:
+      /bin/sh -c
+    command:
+      - apk --no-cache update && apk --no-cache add bash jq curl && rm -rf /var/cache/apk/* && /test/run.sh

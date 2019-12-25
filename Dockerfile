@@ -1,18 +1,17 @@
-FROM nginx:stable
+FROM nginx:stable-alpine
 
-MAINTAINER Andrey Sizov, andrey.sizov@jetbrains.com
+LABEL maintainer="Andrey Sizov, andrey.sizov@jetbrains.com"
+LABEL image.Version="dev"
 
-ENV SERVER_NAME='_' \
-	AUTH='test:YZOheU342o4OU' \
-	ELK_HOST='elk.example.com' \
-	SCHEME='https' \
-	DOLLAR='$' \
-	RESOLVER='8.8.8.8'
+ARG CONTAINER_VERSION=dev
 
-COPY default.conf.template auth.htpasswd.template /etc/nginx/conf.d/
+ENV CONTAINER_VERSION ${CONTAINER_VERSION}
+ENV ROUTE_RULES ""
+
+ADD entrypoint.sh /entrypoint.sh
+ADD nginx /etc/nginx
 
 EXPOSE 80
 
-CMD /bin/bash -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf \ 
-			&& envsubst < /etc/nginx/conf.d/auth.htpasswd.template > /etc/nginx/conf.d/auth.htpasswd \ 
-			&& nginx -g 'daemon off;'"
+CMD ["nginx"]
+ENTRYPOINT ["/entrypoint.sh"]
